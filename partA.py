@@ -57,11 +57,17 @@ def get_fixed_positions(graph, aut):
     fix_g = find_fixed_points(graph, aut)
     num_fixed = len(fix_g)
     dy = 2.0 / (num_fixed-1)
-    for i in range(num_fixed):
-#    j=0
-#    for i in [0,2,1,3]:
-        fixed_pos[fix_g[i]] = (0, 1.0 - dy * i)
-#        j+=1
+    subgraph = graph.subgraph(fix_g)
+    i = 0
+    for edge in subgraph.edges():
+        fixed_pos[edge[0]] = (0, 1.0 - dy * i)
+        i += 1
+        fixed_pos[edge[1]] = (0, 1.0 - dy * i)
+        i += 1
+    for vertex in fix_g:
+        if vertex not in fixed_pos:
+            fixed_pos[vertex] = (0, 1.0 - dy * i)
+            i += 1
     return fixed_pos
 
 def draw_reflection(graph, autogroup):
