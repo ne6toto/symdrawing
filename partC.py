@@ -31,7 +31,7 @@ def angle_to_xy(theta):
     return x,y
 
 def get_orbit_positions(aut):
-#    print "aut", aut
+    print "aut", aut
     orbit_pos = {}
     num_orbits = len(aut)
     # add each element in the orbit to a location at 2pi(i + jn/k)/n.
@@ -48,23 +48,22 @@ def get_orbit_positions(aut):
             #orbit_pos[aut[i][1]] = (-x,y)
     return orbit_pos
 
-def get_orbit_positions_with_space(aut):
-#    print "aut", aut
+def get_orbit_positions_arclength(aut):
     orbit_pos = {}
     num_orbits = len(aut)
-    orbit_size = len(aut[0])
-    # add each element in the orbit to a location at 2pi(i + jn/k)/n.
+    # add each element in the orbit to an equally-spaced position
+    # on the outer circle
+    dy = math.pi / (num_orbits+1)
+    print dy
     for i in range(num_orbits):
-        for j in range(orbit_size):
-            # place elements of the orbits, so that they are on a circle
-            theta = 2*math.pi*(i + j*(num_orbits+1))/((num_orbits+1) * orbit_size) # 1.0 - dy*(i+1)
-            # get cartesian coordinates
-            x,y = angle_to_xy(theta)
-            print theta*180/math.pi, x,y
-            orbit_pos[aut[i][j]] = (x,y)
-            #orbit_pos[aut[i][1]] = (-x,y)
+        # equally space y and set x so that they are on circle
+        angle = math.pi/2 - dy*(i+1)
+        # this is well defined in I and IV quadrant
+        x = math.cos(angle)
+        y = math.sin(angle)
+        orbit_pos[aut[i][0]] = (x,y)
+        orbit_pos[aut[i][1]] = (-x,y)
     return orbit_pos
-
 
 def get_fixed_positions(graph, aut):
     fixed_pos = {}
@@ -81,14 +80,14 @@ def draw_rotation(graph, autogroup):
     positions = {}
     # orbit points
     print "orbit", get_orbit_positions(autogroup).keys()
-    #positions.update(get_orbit_positions(autogroup))
-    positions.update(get_orbit_positions_with_space(autogroup))
+    positions.update(get_orbit_positions(autogroup))
+    #positions.update(get_orbit_positions_arclength(autogroup))
     # add fixed points
     print "fixed", get_fixed_positions(graph,autogroup).keys()
     positions.update(get_fixed_positions(graph, autogroup))
     print positions.keys()
-    nx.draw(graph,positions,node_color='black',node_size=22)
-#    nx.draw_networkx(graph,positions)
+#    nx.draw(graph,positions,node_color='black',node_size=22)
+    nx.draw_networkx(graph,positions)
     plt.show()
 #    print positions
     print "done"
