@@ -94,7 +94,7 @@ graph, aut = load_graph("garnick11b.txt")
 draw_reflection(graph, aut)
 #"""
 
-#"""
+"""
 graph, aut = load_graph("demoG32a.txt")
 #print graph.nodes()
 #print graph.edges()
